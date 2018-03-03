@@ -32,7 +32,7 @@ abstract class AbstractAdapter implements AdapterInterface
                 throw new ApiException('Method Not Allowed. You’re using an HTTP method on a resource which does not support it.');
                 break;
             case 406:
-                throw new ApiException('Not Acceptable. One or more required parameters are missing in the request.');
+                throw new ApiException('Not Acceptable. One or more required parameters are missing or not correct in the request.');
                 break;
             case 408:
                 throw new ApiException('Request Timeout. The request got a timeout.');

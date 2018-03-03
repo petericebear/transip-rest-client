@@ -96,36 +96,46 @@ class JsonData
     ];
 
     /**
-     * Will mimic the behavior of get and post calls of the real TransIP API.
+     * Will mimic the behavior of calls of the real TransIP API.
      *
      * @param string $url
+     * @param array $args
+     * @param string $type
      *
      * @return string
      */
-    public function getResponse($url, array $args) {
+    public function getResponse($url, array $args, $type)
+    {
         $response = '{}';
 
-//        // Handle server/list call with argument SUBID.
-//        switch ($url) {
-//            case 'server/list':
-//                if (isset($args['SUBID'])) {
-//                    $response = json_decode($this->response[$url], true);
-//                    $response = json_encode($response[$args['SUBID']]);
-//                }
-//                break;
-//
-//            case 'plans/list':
-//                if (isset($args['type']) && $args['type'] != 'all') {
-//                    $response = json_decode($this->response[$url], true);
-//                    foreach ($response as $pos => $row) {
-//                        if (strtolower($row['plan_type']) != $args['type']) {
-//                            unset($response[$pos]);
-//                        }
-//                    }
-//                    $response = json_encode($response);
-//                }
-//                break;
-//        }
+        if ($type == 'post') {
+            switch ($url) {
+                case 'vps':
+                    if (isset($args['vpsName'])) {
+                        // Clone action
+                        if (empty($args['vpsName']) || $args['vpsName'] == 'vps-not-found') {
+                            header("HTTP/1.0 404 Not Found");
+                            $response =  'Server not Found';
+                            break;
+                        } else {
+                            header("HTTP/1.0 201 Created");
+                            $response =  '';
+                            break;
+                        }
+                    } elseif (isset($args['hostname']) && $args['hostname'] == 'ex@mple-vps') {
+                        header("HTTP/1.0 406 Not Acceptable");
+                        $response = "This is not a valid hostname: 'ex@mple-vps'";
+                        break;
+                    } else {
+                        header("HTTP/1.0 201 Created");
+                        $response = '';
+                        break;
+                    }
+                    break;
+            }
+
+            return $response;
+        }
 
         if ($response === '{}' && isset($this->response[$url])) {
             if ($this->response[$url] == 404) {

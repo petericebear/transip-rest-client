@@ -19,13 +19,20 @@ $jsonData = new \TransIP\Tests\JsonData();
 
 // Grab requested url.
 $url = ltrim($_SERVER['PATH_INFO'], '/');
+$type = 'get';
 
 // Prepare arguments.
 $args = $_GET;
 unset($args['accesstoken']);
+unset($args['api_token']);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $type = 'post';
+    $args = json_decode(file_get_contents('php://input'), true);
+}
 
 // Return fake data.
 header('Content-Type: application/json');
 print(
-    $jsonData->getResponse($url, $args)
+    $jsonData->getResponse($url, $args, $type)
 );

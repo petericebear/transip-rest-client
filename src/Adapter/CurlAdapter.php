@@ -44,7 +44,7 @@ class CurlAdapter extends AbstractAdapter
     {
         $this->accessToken = $accessToken;
         $this->responseCode = 0;
-        $this->debug = true;
+        $this->debug = false;
 
         $this->endpoint = TransIPClient::ENDPOINT;
     }
@@ -124,10 +124,9 @@ class CurlAdapter extends AbstractAdapter
 
         switch ($requestType) {
             case 'POST':
-                $postData = http_build_query($args);
                 $defaults[CURLOPT_URL] = $url;
                 $defaults[CURLOPT_POST] = 1;
-                $defaults[CURLOPT_POSTFIELDS] = json_encode($postData);
+                $defaults[CURLOPT_POSTFIELDS] = json_encode($args);
                 break;
 
             case 'GET':
@@ -171,15 +170,15 @@ class CurlAdapter extends AbstractAdapter
         $code = curl_getinfo($responseObj, CURLINFO_HTTP_CODE);
         curl_close($responseObj);
 
-        if ($getCode) {
-            $this->responseCode = $code;
-            return;
-        }
-
         if ($this->debug) {
             echo $code . PHP_EOL;
         }
 
         $this->reportError($code, $response);
+
+        if ($getCode) {
+            $this->responseCode = $code;
+            return;
+        }
     }
 }

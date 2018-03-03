@@ -30,4 +30,13 @@ class VPS extends AbstractApiCall
 
         return $this->adapter->post('vps', $args, true);
     }
+
+    public function cloneVps($name)
+    {
+        $args = [
+            'vpsName' => $name,
+        ];
+
+        return $this->adapter->post('vps', $args, true);
+    }
 }

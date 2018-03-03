@@ -157,23 +157,22 @@ class GuzzleHttpAdapter extends AbstractAdapter
             return $this->handleError($getCode);
         }
 
-        // $response->json() is not compatible with Guzzle 6.
         return json_decode($this->response->getBody());
     }
 
     /**
-     * @throws ApiException
+     * @param bool $getCode
+     * @return int
      */
     protected function handleError($getCode = false)
     {
         $code = (int) $this->response->getStatusCode();
 
+        $content = (string) $this->response->getBody();
+        $this->reportError($code, $content);
+
         if ($getCode) {
             return $code;
         }
-
-        $content = (string) $this->response->getBody();
-
-        $this->reportError($code, $content);
     }
 }

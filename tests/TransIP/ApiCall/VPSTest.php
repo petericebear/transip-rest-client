@@ -68,7 +68,42 @@ class ServerTest extends TestCase
     /** @test */
     public function can_order_a_vps()
     {
-        $result = $this->client->vps()->order('vps-bladevps-x8', 'ubuntu-16.04', ['vpsAddon-1-extra-cpu-core']);
+        $result = $this->client->vps()->order('vps-bladevps-x4', 'ubuntu-16.04', ['vpsAddon-1-extra-cpu-core']);
 
+        $this->assertInternalType('int', $result);
+        $this->assertEquals(201, $result);
+    }
+
+    /**
+     * @test
+     * @expectedException \TransIP\Exception\ApiException
+     */
+    public function ordering_a_vps_failes_when_hostname_is_not_correct()
+    {
+        $result = $this->client->vps()->order('vps-bladevps-x4', 'ubuntu-16.04', ['vpsAddon-1-extra-cpu-core'], 'ex@mple-vps');
+
+        $this->assertInternalType('int', $result);
+        $this->assertEquals(406, $result);
+    }
+
+    /** @test */
+    public function can_clone_a_vps()
+    {
+        $result = $this->client->vps()->cloneVps('example-vps');
+
+        $this->assertInternalType('int', $result);
+        $this->assertEquals(201, $result);
+    }
+
+    /**
+     * @test
+     * @expectedException \TransIP\Exception\ApiException
+     */
+    public function get_error_when_vps_for_clone_not_found()
+    {
+        $result = $this->client->vps()->cloneVps('vps-not-found');
+
+        $this->assertInternalType('int', $result);
+        $this->assertEquals(404, $result);
     }
 }
