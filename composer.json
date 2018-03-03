@@ -1,0 +1,26 @@
+{
+  "name": "petericebear/transip-rest-client",
+  "description": "TransIP - PHP Framework Agnostic REST Client.",
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/petericbear/transip-rest-client",
+  "authors": [
+    {
+      "name": "Peter Steenbergen",
+      "email": "psteenbergen@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0"
+  },
+  "require-dev": {
+    "guzzlehttp/guzzle": "5.3 - 6.3",
+    "phpunit/phpunit": "~5.0"
+  },
+  "autoload": {
+    "psr-4": { "TransIP\\": "src" }
+  },
+  "suggest": {
+    "guzzlehttp/guzzle": "To use GuzzleHttpAdapter, require guzzlehttp/guzzle:^5.0|^6.0"
+  }
+}

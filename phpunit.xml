@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<phpunit bootstrap="tests/bootstrap.php"
+         colors="true"
+>
+    <php>
+        <env name="ADAPTER" value="GuzzleHttpAdapter"/>
+        <env name="ACCESSTOKEN" value="EXAMPLE"/>
+        <env name="ENDPOINT" value="http://localhost:8000/index.php/"/>
+    </php>
+
+    <testsuites>
+        <testsuite name="TransIP REST Client">
+            <directory>./tests/TransIP</directory>
+        </testsuite>
+    </testsuites>
+
+</phpunit>
