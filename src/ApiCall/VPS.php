@@ -13,17 +13,27 @@ class VPS extends AbstractApiCall
         'reset',
     ];
 
+    public function availabilityZones()
+    {
+        return $this->adapter->get('availability-zone');
+    }
+
+    public function availabilityZone($zone)
+    {
+        return $this->adapter->get('availability-zone/'.$zone);
+    }
+
     public function products()
     {
         return $this->adapter->get('products');
     }
 
-    public function vps()
+    public function vpses()
     {
         return $this->adapter->get('vps');
     }
 
-    public function vpsInfo($name)
+    public function info($name)
     {
         return $this->adapter->get('vps/'.$name);
     }
@@ -49,7 +59,7 @@ class VPS extends AbstractApiCall
         return $this->adapter->post('vps', $args, true);
     }
 
-    public function vpsAction($name, $action)
+    public function action($name, $action)
     {
         if (! in_array($action, $this->actions)) {
             $this->adapter->reportError(406, 'Not an available action given.');
@@ -62,9 +72,9 @@ class VPS extends AbstractApiCall
         return $this->adapter->patch('vps/'.$name, $args, true);
     }
 
-    public function updateVPS($name, array $changes = [])
+    public function update($name, array $changes = [])
     {
-        $details = $this->vpsInfo($name);
+        $details = $this->info($name);
 
         foreach ($changes as $key => $value) {
             $details->vps->{$key} = $value;

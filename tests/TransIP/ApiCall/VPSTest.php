@@ -30,6 +30,22 @@ class ServerTest extends TestCase
     }
 
     /** @test */
+    public function get_all_availability_zones()
+    {
+        $result = $this->client->vps()->availabilityZones();
+
+        $this->assertObjectHasAttribute('availabilityZones', $result);
+    }
+
+    /** @test */
+    public function get_all_availability_zone()
+    {
+        $result = $this->client->vps()->availabilityZone('ams0');
+
+        $this->assertObjectHasAttribute('availabilityZone', $result);
+    }
+
+    /** @test */
     public function get_all_the_products()
     {
         $result = $this->client->vps()->products();
@@ -44,7 +60,7 @@ class ServerTest extends TestCase
     /** @test */
     public function get_all_the_vpses()
     {
-        $result = $this->client->vps()->vps();
+        $result = $this->client->vps()->vpses();
 
         $this->assertObjectHasAttribute('vpses', $result);
     }
@@ -52,7 +68,7 @@ class ServerTest extends TestCase
     /** @test */
     public function get_vps_info()
     {
-        $result = $this->client->vps()->vpsInfo('example-vps');
+        $result = $this->client->vps()->info('example-vps');
 
         $this->assertObjectHasAttribute('vps', $result);
         $this->assertEquals('example-vps', $result->vps->name);
@@ -64,7 +80,7 @@ class ServerTest extends TestCase
      */
     public function get_error_when_vps_not_found()
     {
-        $this->client->vps()->vpsInfo('vps-not-found');
+        $this->client->vps()->info('vps-not-found');
     }
 
     /** @test */
@@ -100,7 +116,7 @@ class ServerTest extends TestCase
     /** @test */
     public function can_lock_a_vps()
     {
-        $result = $this->client->vps()->updateVPS('example-vps', ['isCustomerLocked' => true]);
+        $result = $this->client->vps()->update('example-vps', ['isCustomerLocked' => true]);
 
         $this->assertInternalType('int', $result);
     }
@@ -108,7 +124,7 @@ class ServerTest extends TestCase
     /** @test */
     public function can_unlock_a_vps()
     {
-        $result = $this->client->vps()->updateVPS('example-vps', ['isCustomerLocked' => false]);
+        $result = $this->client->vps()->update('example-vps', ['isCustomerLocked' => false]);
 
         $this->assertInternalType('int', $result);
     }
@@ -116,7 +132,7 @@ class ServerTest extends TestCase
     /** @test */
     public function can_change_description_of_vps()
     {
-        $result = $this->client->vps()->updateVPS('example-vps', ['description' => 'New description']);
+        $result = $this->client->vps()->update('example-vps', ['description' => 'New description']);
 
         $this->assertInternalType('int', $result);
     }
@@ -124,7 +140,7 @@ class ServerTest extends TestCase
     /** @test */
     public function can_start_a_vps()
     {
-        $result = $this->client->vps()->vpsAction('example-vps', 'start');
+        $result = $this->client->vps()->action('example-vps', 'start');
 
         $this->assertInternalType('int', $result);
     }
@@ -132,7 +148,7 @@ class ServerTest extends TestCase
     /** @test */
     public function can_stop_a_vps()
     {
-        $result = $this->client->vps()->vpsAction('example-vps', 'stop');
+        $result = $this->client->vps()->action('example-vps', 'stop');
 
         $this->assertInternalType('int', $result);
     }
@@ -140,7 +156,7 @@ class ServerTest extends TestCase
     /** @test */
     public function can_reset_a_vps()
     {
-        $result = $this->client->vps()->vpsAction('example-vps', 'reset');
+        $result = $this->client->vps()->action('example-vps', 'reset');
 
         $this->assertInternalType('int', $result);
     }
@@ -151,7 +167,7 @@ class ServerTest extends TestCase
      */
     public function does_a_check_for_valid_action()
     {
-        $this->client->vps()->vpsAction('example-vps', 'not-allowed');
+        $this->client->vps()->action('example-vps', 'not-allowed');
     }
 
     /**

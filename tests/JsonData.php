@@ -5,6 +5,29 @@ namespace TransIP\Tests;
 class JsonData
 {
     private $response = [
+        'availability-zone' => '{
+          "availabilityZones": [
+            {
+              "name": "ams0",
+              "country": "nl",
+              "isDefault": false
+            },
+            {
+              "name": "rtm0",
+              "country": "nl",
+              "isDefault": true
+            }
+          ]
+        }',
+
+        'availability-zone/ams0' => '{
+          "availabilityZone": {
+            "name": "ams0",
+            "country": "nl",
+            "isDefault": true
+          }
+        }',
+
         'traffic' => '{
           "trafficInformation": {
             "startDate": "2017-06-22",
