@@ -39,4 +39,19 @@ class VPS extends AbstractApiCall
 
         return $this->adapter->post('vps', $args, true);
     }
+
+    public function updateVPS($name, array $changes = [])
+    {
+        $details = $this->vpsInfo($name);
+
+        foreach ($changes as $key => $value) {
+            $details->vps->{$key} = $value;
+        }
+
+        $args = [
+            'vps' => $details,
+        ];
+
+        return $this->adapter->put('vps/'.$name, $args, true);
+    }
 }

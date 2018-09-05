@@ -90,6 +90,14 @@ class CurlAdapter extends AbstractAdapter
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function put($url, array $args, $getCode = false)
+    {
+        return $this->query($url, $args, 'PUT', $getCode);
+    }
+
+    /**
      * API Query Function
      *
      * @param string  $url
@@ -126,6 +134,12 @@ class CurlAdapter extends AbstractAdapter
             case 'POST':
                 $defaults[CURLOPT_URL] = $url;
                 $defaults[CURLOPT_POST] = 1;
+                $defaults[CURLOPT_POSTFIELDS] = json_encode($args);
+                break;
+
+            case 'PUT':
+                $defaults[CURLOPT_URL] = $url;
+                $defaults[CURLOPT_PUT] = 1;
                 $defaults[CURLOPT_POSTFIELDS] = json_encode($args);
                 break;
 

@@ -3,6 +3,7 @@
 namespace TransIP\Tests\ApiCall;
 
 use PHPUnit\Framework\TestCase;
+use TransIP\ApiCall\VPS;
 use TransIP\TransIPClient;
 
 class ServerTest extends TestCase
@@ -93,6 +94,22 @@ class ServerTest extends TestCase
 
         $this->assertInternalType('int', $result);
         $this->assertEquals(201, $result);
+    }
+
+    /** @test */
+    public function can_lock_a_vps()
+    {
+        $result = $this->client->vps()->updateVPS('example-vps', ['isCustomerLocked' => true]);
+
+        $this->assertInternalType('int', $result);
+    }
+
+    /** @test */
+    public function can_unlock_a_vps()
+    {
+        $result = $this->client->vps()->updateVPS('example-vps', ['isCustomerLocked' => false]);
+
+        $this->assertInternalType('int', $result);
     }
 
     /**
