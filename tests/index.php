@@ -41,6 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $args = json_decode(file_get_contents('php://input'), true);
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+    $type = 'delete';
+    $args = json_decode(file_get_contents('php://input'), true);
+}
+
 // Return fake data.
 header('Content-Type: application/json');
 print(

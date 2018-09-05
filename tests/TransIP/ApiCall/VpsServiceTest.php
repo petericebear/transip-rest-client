@@ -3,11 +3,9 @@
 namespace TransIP\Tests\ApiCall;
 
 use PHPUnit\Framework\TestCase;
-use TransIP\ApiCall\VPS;
-use TransIP\Exception\ApiException;
 use TransIP\TransIPClient;
 
-class ServerTest extends TestCase
+class VpsServiceTest extends TestCase
 {
     /**
      * @var TransIPClient
@@ -15,7 +13,7 @@ class ServerTest extends TestCase
     protected $client;
 
     /**
-     * @var JsonData
+     * @var $jsonData
      */
     protected $jsonData;
 
@@ -180,6 +178,24 @@ class ServerTest extends TestCase
 
         $this->assertInternalType('int', $result);
         $this->assertEquals(404, $result);
+    }
+
+    /** @test */
+    public function can_delete_a_vps()
+    {
+        $result = $this->client->vps()->cancel('delete-vps');
+
+        $this->assertInternalType('int', $result);
+        $this->assertEquals(204, $result);
+    }
+
+    /**
+     * @test
+     * @expectedException \TransIP\Exception\ApiException
+     */
+    public function cannot_delete_a_vps_when_incorrect_endtime_is_given()
+    {
+        $this->client->vps()->cancel('delete-vps', 'not-allowed');
     }
 
     /** @test */

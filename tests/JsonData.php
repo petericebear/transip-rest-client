@@ -137,6 +137,8 @@ class JsonData
 
         'vps/vps-not-found' => 404,
 
+        'vps/delete-vps' => 204,
+
         'traffic/vps-not-found' => 404,
     ];
 
@@ -186,6 +188,11 @@ class JsonData
             if ($this->response[$url] == 404) {
                 header("HTTP/1.0 404 Not Found");
                 $response = 'Not Found';
+                return $response;
+            }
+            if ($this->response[$url] == 204) {
+                header("HTTP/1.0 204 No content");
+                $response = 'No content';
                 return $response;
             }
             $response = $this->response[$url];

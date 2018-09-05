@@ -2,7 +2,7 @@
 
 namespace TransIP\ApiCall;
 
-class VPS extends AbstractApiCall
+class VpsService extends AbstractApiCall
 {
     /**
      * @var array $actions Available actions to trigger for VPS.
@@ -11,6 +11,14 @@ class VPS extends AbstractApiCall
         'start',
         'stop',
         'reset',
+    ];
+
+    /**
+     * @var array $endTimes When to delete the VPS? Immediately or at the end of current Period?
+     */
+    protected $endTimes = [
+        'end',
+        'immediately',
     ];
 
     public function availabilityZones()
@@ -85,6 +93,19 @@ class VPS extends AbstractApiCall
         ];
 
         return $this->adapter->put('vps/'.$name, $args, true);
+    }
+
+    public function cancel($name, $endTime = 'end')
+    {
+        if (! in_array($endTime, $this->endTimes)) {
+            $this->adapter->reportError(406, 'Not an available endTime given.');
+        }
+
+        $args = [
+            'endTime' => $endTime,
+        ];
+
+        return $this->adapter->delete('vps/'.$name, $args, true);
     }
 
     public function traffic()

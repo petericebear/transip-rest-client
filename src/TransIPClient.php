@@ -3,7 +3,7 @@
 namespace TransIP;
 
 use TransIP\Adapter\AdapterInterface;
-use TransIP\ApiCall\VPS;
+use TransIP\ApiCall\VpsService;
 
 class TransIPClient
 {
@@ -22,10 +22,10 @@ class TransIPClient
     /**
      * Provides VPS related calls.
      *
-     * @return VPS
+     * @return VpsService
      */
     public function vps()
     {
-        return new VPS($this->adapter);
+        return new VpsService($this->adapter);
     }
 }
