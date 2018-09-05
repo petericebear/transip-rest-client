@@ -4,6 +4,7 @@ namespace TransIP\Tests\ApiCall;
 
 use PHPUnit\Framework\TestCase;
 use TransIP\ApiCall\VPS;
+use TransIP\Exception\ApiException;
 use TransIP\TransIPClient;
 
 class ServerTest extends TestCase
@@ -110,6 +111,46 @@ class ServerTest extends TestCase
         $result = $this->client->vps()->updateVPS('example-vps', ['isCustomerLocked' => false]);
 
         $this->assertInternalType('int', $result);
+    }
+
+    /** @test */
+    public function can_change_description_of_vps()
+    {
+        $result = $this->client->vps()->updateVPS('example-vps', ['description' => 'New description']);
+
+        $this->assertInternalType('int', $result);
+    }
+
+    /** @test */
+    public function can_start_a_vps()
+    {
+        $result = $this->client->vps()->vpsAction('example-vps', 'start');
+
+        $this->assertInternalType('int', $result);
+    }
+
+    /** @test */
+    public function can_stop_a_vps()
+    {
+        $result = $this->client->vps()->vpsAction('example-vps', 'stop');
+
+        $this->assertInternalType('int', $result);
+    }
+
+    /** @test */
+    public function can_reset_a_vps()
+    {
+        $result = $this->client->vps()->vpsAction('example-vps', 'reset');
+
+        $this->assertInternalType('int', $result);
+    }
+
+    /** @test */
+    public function does_a_check_for_valid_action()
+    {
+        $this->expectException(ApiException::class);
+
+        $this->client->vps()->vpsAction('example-vps', 'not-allowed');
     }
 
     /**

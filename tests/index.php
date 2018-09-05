@@ -26,8 +26,18 @@ $args = $_GET;
 unset($args['accesstoken']);
 unset($args['api_token']);
 
+if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
+    $type = 'patch';
+    $args = json_decode(file_get_contents('php://input'), true);
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $type = 'post';
+    $args = json_decode(file_get_contents('php://input'), true);
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    $type = 'put';
     $args = json_decode(file_get_contents('php://input'), true);
 }
 

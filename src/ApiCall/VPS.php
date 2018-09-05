@@ -4,6 +4,15 @@ namespace TransIP\ApiCall;
 
 class VPS extends AbstractApiCall
 {
+    /**
+     * @var array $actions Available actions to trigger for VPS.
+     */
+    protected $actions = [
+        'start',
+        'stop',
+        'reset',
+    ];
+
     public function products()
     {
         return $this->adapter->get('products');
@@ -38,6 +47,19 @@ class VPS extends AbstractApiCall
         ];
 
         return $this->adapter->post('vps', $args, true);
+    }
+
+    public function vpsAction($name, $action)
+    {
+        if (! in_array($action, $this->actions)) {
+            $this->adapter->reportError(406, 'Not an available action given.');
+        }
+
+        $args = [
+            'action' => $action,
+        ];
+
+        return $this->adapter->patch('vps/'.$name, $args, true);
     }
 
     public function updateVPS($name, array $changes = [])

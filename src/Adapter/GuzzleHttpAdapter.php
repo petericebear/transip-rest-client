@@ -142,6 +142,27 @@ class GuzzleHttpAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      */
+    public function patch($url, array $args, $getCode = false)
+    {
+        $options[$this->postOptions] = json_encode($args);
+
+        try {
+            $this->response = $this->client->patch($url, $options);
+
+            if ($getCode) {
+                return (int) $this->response->getStatusCode();
+            }
+        } catch (RequestException $e) {
+            $this->response = $e->getResponse();
+            return $this->handleError($getCode);
+        }
+
+        return json_decode($this->response->getBody());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function post($url, array $args, $getCode = false)
     {
         $options[$this->postOptions] = json_encode($args);

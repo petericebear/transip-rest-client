@@ -93,6 +93,10 @@ class JsonData
         }',
 
         'vps/vps-not-found' => 404,
+
+        'vps/start-vps' => 204,
+
+        'vps/stop-vps' => 204,
     ];
 
     /**

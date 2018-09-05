@@ -84,6 +84,14 @@ class CurlAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      */
+    public function patch($url, array $args, $getCode = false)
+    {
+        return $this->query($url, $args, 'PATCH', $getCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function post($url, array $args, $getCode = false)
     {
         return $this->query($url, $args, 'POST', $getCode);
@@ -102,7 +110,7 @@ class CurlAdapter extends AbstractAdapter
      *
      * @param string  $url
      * @param array   $args
-     * @param string  $requestType POST|GET
+     * @param string  $requestType PATCH|POST|PUT|GET
      * @param boolean $getCode     whether or not to return the HTTP response code
      *
      * @return object|integer
@@ -127,10 +135,16 @@ class CurlAdapter extends AbstractAdapter
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_FORBID_REUSE => 1,
             CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTPHEADER => ['Accept: application/json', 'Authorization: Bearer '.$this->accessToken],
+            CURLOPT_HTTPHEADER => ['Accept: application/json', 'Content-Type: application/json', 'Authorization: Bearer '.$this->accessToken],
         ];
 
         switch ($requestType) {
+            case 'PATCH':
+                $defaults[CURLOPT_URL] = $url;
+                $defaults[CURLOPT_CUSTOMREQUEST] = 'PATCH';
+                $defaults[CURLOPT_POSTFIELDS] = json_encode($args);
+                break;
+
             case 'POST':
                 $defaults[CURLOPT_URL] = $url;
                 $defaults[CURLOPT_POST] = 1;
