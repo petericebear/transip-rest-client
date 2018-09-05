@@ -64,7 +64,7 @@ class ServerTest extends TestCase
      */
     public function get_error_when_vps_not_found()
     {
-        $result = $this->client->vps()->vpsInfo('vps-not-found');
+        $this->client->vps()->vpsInfo('vps-not-found');
     }
 
     /** @test */
@@ -145,11 +145,12 @@ class ServerTest extends TestCase
         $this->assertInternalType('int', $result);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @expectedException \TransIP\Exception\ApiException
+     */
     public function does_a_check_for_valid_action()
     {
-        $this->expectException(ApiException::class);
-
         $this->client->vps()->vpsAction('example-vps', 'not-allowed');
     }
 
@@ -163,5 +164,32 @@ class ServerTest extends TestCase
 
         $this->assertInternalType('int', $result);
         $this->assertEquals(404, $result);
+    }
+
+    /** @test */
+    public function can_get_traffic_information()
+    {
+        $result = $this->client->vps()->traffic();
+
+        $this->assertObjectHasAttribute('trafficInformation', $result);
+        $this->assertEquals('2017-06-22', $result->trafficInformation->startDate);
+    }
+
+    /** @test */
+    public function can_get_traffic_information_for_vps()
+    {
+        $result = $this->client->vps()->trafficVps('example-vps');
+
+        $this->assertObjectHasAttribute('trafficInformation', $result);
+        $this->assertEquals('2017-06-22', $result->trafficInformation->startDate);
+    }
+
+    /**
+     * @test
+     * @expectedException \TransIP\Exception\ApiException
+     */
+    public function get_error_when_vps_not_found_for_traffic_info()
+    {
+        $this->client->vps()->trafficVps('vps-not-found');
     }
 }

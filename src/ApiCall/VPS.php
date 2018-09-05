@@ -76,4 +76,14 @@ class VPS extends AbstractApiCall
 
         return $this->adapter->put('vps/'.$name, $args, true);
     }
+
+    public function traffic()
+    {
+        return $this->adapter->get('traffic');
+    }
+
+    public function trafficVps($name)
+    {
+        return $this->adapter->get('traffic/'.$name);
+    }
 }

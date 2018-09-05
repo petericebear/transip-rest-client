@@ -5,6 +5,26 @@ namespace TransIP\Tests;
 class JsonData
 {
     private $response = [
+        'traffic' => '{
+          "trafficInformation": {
+            "startDate": "2017-06-22",
+            "endDate": "2017-07-22",
+            "usedInBytes": 7860253754,
+            "usedTotalBytes": 11935325369,
+            "maxInBytes": 1073741824000
+          }
+        }',
+
+        'traffic/example-vps' => '{
+          "trafficInformation": {
+            "startDate": "2017-06-22",
+            "endDate": "2017-07-22",
+            "usedInBytes": 7860253754,
+            "usedTotalBytes": 11935325369,
+            "maxInBytes": 1073741824000
+          }
+        }',
+
         'products' => '{
           "vps": [
             {
@@ -94,9 +114,7 @@ class JsonData
 
         'vps/vps-not-found' => 404,
 
-        'vps/start-vps' => 204,
-
-        'vps/stop-vps' => 204,
+        'traffic/vps-not-found' => 404,
     ];
 
     /**
