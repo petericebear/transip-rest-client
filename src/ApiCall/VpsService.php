@@ -57,6 +57,18 @@ class VpsService extends AbstractApiCall
         return $this->adapter->delete('vps/' . $name, $args, true);
     }
 
+    public function changeDescription($name, $description)
+    {
+        $details = $this->vps($name);
+        $details->vps->description = $description;
+
+        $args = [
+            'vps' => $details,
+        ];
+
+        return $this->adapter->put('vps/' . $name, $args, true);
+    }
+
     public function cloneVps($name, $availabilityZone)
     {
         $args = [
