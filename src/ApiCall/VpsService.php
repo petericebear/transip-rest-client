@@ -34,6 +34,11 @@ class VpsService extends AbstractApiCall
         return $this->adapter->patch('vps/' . $name, $args, true);
     }
 
+    public function addons($name)
+    {
+        return $this->adapter->get(sprintf('/vps/%s/addons', $name));
+    }
+
     public function availabilityZones()
     {
         return $this->adapter->get('availability-zone');
@@ -55,6 +60,14 @@ class VpsService extends AbstractApiCall
         ];
 
         return $this->adapter->delete('vps/' . $name, $args, true);
+    }
+
+    public function cancelAddon($name, $addon)
+    {
+        $args = [
+        ];
+
+        return $this->adapter->delete(sprintf('vps/%s/addons/%s', $name, $addon), $args, true);
     }
 
     public function changeDescription($name, $description)
@@ -124,9 +137,28 @@ class VpsService extends AbstractApiCall
         return $this->adapter->post('vps', $args, true);
     }
 
+    public function orderAddons($name, array $addons)
+    {
+        $args = [
+            'addons' => $addons,
+        ];
+
+        return $this->adapter->post(sprintf('/vps/%s/addons', $name), $args, true);
+    }
+
     public function products()
     {
         return $this->adapter->get('products');
+    }
+
+    public function traffic($name)
+    {
+        return $this->adapter->get('traffic/' . $name);
+    }
+
+    public function trafficTotal()
+    {
+        return $this->adapter->get('traffic');
     }
 
     public function unlock($name)
@@ -156,6 +188,30 @@ class VpsService extends AbstractApiCall
         return $this->adapter->put('vps/' . $name, $args, true);
     }
 
+    public function upgrades($name)
+    {
+        return $this->adapter->get(sprintf('vps/%s/upgrades', $name));
+    }
+
+    public function upgrade($name, $productName)
+    {
+        $args = [
+            'productName' => $productName,
+        ];
+
+        return $this->adapter->post(sprintf('vps/%s/upgrades', $name), $args, true);
+    }
+
+    public function usageData($name)
+    {
+        return $this->adapter->get(sprintf('vps/%s/usage', $name));
+    }
+
+    public function vncData($name)
+    {
+        return $this->adapter->get(sprintf('vps/%s/vnc-data', $name));
+    }
+
     public function vps($name)
     {
         return $this->adapter->get('vps/' . $name);
@@ -164,15 +220,5 @@ class VpsService extends AbstractApiCall
     public function vpsList()
     {
         return $this->adapter->get('vps');
-    }
-
-    public function traffic($name)
-    {
-        return $this->adapter->get('traffic/' . $name);
-    }
-
-    public function trafficTotal()
-    {
-        return $this->adapter->get('traffic');
     }
 }
