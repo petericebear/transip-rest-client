@@ -2,6 +2,10 @@
 
 TransIP offers a REST API and this package is a framework agnostic package for it. Under the hood it can work with either Guzzle or Curl library.
 
+<p align="center">
+<a href="https://travis-ci.org/petericebear/transip-rest-client"><img src="https://api.travis-ci.org/petericebear/transip-rest-client.svg?branch=develop" alt="Build Status"></img></a>
+</p>
+
 ## Usage Examples
 
 Guzzle
