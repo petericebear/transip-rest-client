@@ -66,7 +66,7 @@ class VpsServiceTest extends TestCase
     /** @test */
     public function get_vps_info()
     {
-        $result = $this->client->vps()->info('example-vps');
+        $result = $this->client->vps()->vps('example-vps');
 
         $this->assertObjectHasAttribute('vps', $result);
         $this->assertEquals('example-vps', $result->vps->name);
@@ -78,7 +78,7 @@ class VpsServiceTest extends TestCase
      */
     public function get_error_when_vps_not_found()
     {
-        $this->client->vps()->info('vps-not-found');
+        $this->client->vps()->vps('vps-not-found');
     }
 
     /** @test */
