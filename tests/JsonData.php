@@ -92,13 +92,13 @@ class JsonData
         }',
 
         'vps' => '{
-          "vpses": [
+          "vpss": [
             {
               "name": "example-vps",
               "description": "example VPS",
               "productType": "BladeVPS PureSSD X4",
               "productPrice": 20,
-              "operatingSystem": "ubuntu-16.04",
+              "operatingSystem": "ubuntu-18.04",
               "diskSize": 157286400,
               "memorySize": 4194304,
               "cpus": 2,
@@ -117,10 +117,11 @@ class JsonData
         'vps/example-vps' => '{
           "vps": {
             "name": "example-vps",
+            "availabilityZone": "ams0",
             "description": "example VPS",
             "productType": "BladeVPS PureSSD X4",
             "productPrice": 20,
-            "operatingSystem": "ubuntu-16.04",
+            "operatingSystem": "ubuntu-18.04",
             "diskSize": 157286400,
             "memorySize": 4194304,
             "cpus": 2,

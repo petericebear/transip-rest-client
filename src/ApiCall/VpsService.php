@@ -69,7 +69,7 @@ class VpsService extends AbstractApiCall
         return $this->adapter->put('vps/' . $name, $args, true);
     }
 
-    public function cloneVps($name, $availabilityZone)
+    public function cloneVps($name, $availabilityZone = 'rtm0')
     {
         $args = [
             'vpsName' => $name,
@@ -77,6 +77,16 @@ class VpsService extends AbstractApiCall
         ];
 
         return $this->adapter->post('vps', $args, true);
+    }
+
+    public function handover($name, $targetCustomerName)
+    {
+        $args = [
+            'action' => 'handover',
+            'targetCustomerName' => $targetCustomerName,
+        ];
+
+        return $this->adapter->patch('vps/' . $name, $args, true);
     }
 
     public function lock($name)

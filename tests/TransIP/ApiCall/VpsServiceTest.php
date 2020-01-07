@@ -58,9 +58,9 @@ class VpsServiceTest extends TestCase
     /** @test */
     public function get_all_the_vpses()
     {
-        $result = $this->client->vps()->vpses();
+        $result = $this->client->vps()->vpsList();
 
-        $this->assertObjectHasAttribute('vpses', $result);
+        $this->assertObjectHasAttribute('vpss', $result);
     }
 
     /** @test */
@@ -84,7 +84,7 @@ class VpsServiceTest extends TestCase
     /** @test */
     public function can_order_a_vps()
     {
-        $result = $this->client->vps()->order('vps-bladevps-x4', 'ubuntu-16.04', ['vpsAddon-1-extra-cpu-core']);
+        $result = $this->client->vps()->order('vps-bladevps-x4', 'ubuntu-18.04', 'ams0', ['vpsAddon-1-extra-cpu-core']);
 
         $this->assertInternalType('int', $result);
         $this->assertEquals(201, $result);
@@ -96,7 +96,7 @@ class VpsServiceTest extends TestCase
      */
     public function ordering_a_vps_failes_when_hostname_is_not_correct()
     {
-        $result = $this->client->vps()->order('vps-bladevps-x4', 'ubuntu-16.04', ['vpsAddon-1-extra-cpu-core'], 'ex@mple-vps');
+        $result = $this->client->vps()->order('vps-bladevps-x4', 'ubuntu-18.04', 'ams0', ['vpsAddon-1-extra-cpu-core'], 'ex@mple-vps');
 
         $this->assertInternalType('int', $result);
         $this->assertEquals(406, $result);
@@ -105,7 +105,7 @@ class VpsServiceTest extends TestCase
     /** @test */
     public function can_clone_a_vps()
     {
-        $result = $this->client->vps()->cloneVps('example-vps');
+        $result = $this->client->vps()->cloneVps('example-vps', '');
 
         $this->assertInternalType('int', $result);
         $this->assertEquals(201, $result);
@@ -201,7 +201,7 @@ class VpsServiceTest extends TestCase
     /** @test */
     public function can_get_traffic_information()
     {
-        $result = $this->client->vps()->traffic();
+        $result = $this->client->vps()->trafficTotal();
 
         $this->assertObjectHasAttribute('trafficInformation', $result);
         $this->assertEquals('2017-06-22', $result->trafficInformation->startDate);
@@ -210,7 +210,7 @@ class VpsServiceTest extends TestCase
     /** @test */
     public function can_get_traffic_information_for_vps()
     {
-        $result = $this->client->vps()->trafficVps('example-vps');
+        $result = $this->client->vps()->traffic('example-vps');
 
         $this->assertObjectHasAttribute('trafficInformation', $result);
         $this->assertEquals('2017-06-22', $result->trafficInformation->startDate);
@@ -222,6 +222,6 @@ class VpsServiceTest extends TestCase
      */
     public function get_error_when_vps_not_found_for_traffic_info()
     {
-        $this->client->vps()->trafficVps('vps-not-found');
+        $this->client->vps()->traffic('vps-not-found');
     }
 }
