@@ -34,6 +34,15 @@ class VpsService extends AbstractApiCall
         return $this->adapter->patch('vps/' . $name, $args, true);
     }
 
+    public function addIpAddresses($name, $ipAddress)
+    {
+        $args = [
+            'ipAddress' => $ipAddress,
+        ];
+
+        return $this->adapter->post(sprintf('vps/%s/ip-addresses', $name), $args, true);
+    }
+
     public function addons($name)
     {
         return $this->adapter->get(sprintf('/vps/%s/addons', $name));
@@ -92,6 +101,16 @@ class VpsService extends AbstractApiCall
         return $this->adapter->post('vps', $args, true);
     }
 
+    public function createSnapshot($name, $description, $shouldStartVps = true)
+    {
+        $args = [
+            'description' => $description,
+            'shouldStartVps' => $shouldStartVps,
+        ];
+
+        return $this->adapter->post(sprintf('vps/%s/snapshots', $name), $args, true);
+    }
+
     public function handover($name, $targetCustomerName)
     {
         $args = [
@@ -100,6 +119,39 @@ class VpsService extends AbstractApiCall
         ];
 
         return $this->adapter->patch('vps/' . $name, $args, true);
+    }
+
+    public function installOperatingSystem($name, $operatingSystemName, $hostname = '', $base64InstallText = '')
+    {
+        $args = [
+            'operatingSystemName' => $operatingSystemName,
+            'hostname' => $hostname,
+            'base64InstallText' => $base64InstallText,
+        ];
+
+        return $this->adapter->post(sprintf('vps/%s/operating-systems', $name), $args, true);
+    }
+
+    public function ipAddress($name, $ipAddress)
+    {
+        return $this->adapter->get(sprintf('vps/%s/ip-addresses/%s', $name, $ipAddress));
+    }
+
+    public function reverseDns($name, $ipAddress, $reverseDns)
+    {
+        $details = $this->ipAddress($name, $ipAddress);
+        $details->ipAddress->reverseDns = $reverseDns;
+
+        $args = [
+            'ipAddress' => $details,
+        ];
+
+        return $this->adapter->put(sprintf('vps/%s/ip-addresses/%s', $name, $ipAddress), $args, true);
+    }
+
+    public function ipAddresses($name)
+    {
+        return $this->adapter->get(sprintf('vps/%s/ip-addresses', $name));
     }
 
     public function lock($name)
@@ -112,6 +164,11 @@ class VpsService extends AbstractApiCall
         ];
 
         return $this->adapter->put('vps/' . $name, $args, true);
+    }
+
+    public function operatingSystems($name)
+    {
+        return $this->adapter->get(sprintf('vps/%s/operating-systems', $name));
     }
 
     public function order($productName, $operatingSystem, $availabilityZone, array $addons = [], $hostname = '', $description = '')
@@ -149,6 +206,41 @@ class VpsService extends AbstractApiCall
     public function products()
     {
         return $this->adapter->get('products');
+    }
+
+    public function removeIpAddress($name, $ipAddress)
+    {
+        $args = [
+        ];
+
+        return $this->adapter->delete(sprintf('vps/%s/ip-addresses/%s', $name, $addon), $args, true);
+    }
+
+    public function removeSnapshot($name, $snapshotName)
+    {
+        $args = [
+        ];
+
+        return $this->adapter->delete(sprintf('vps/%s/snapshots/%s', $name, $snapshotName), $args, true);
+    }
+
+    public function revertSnapshot($name, $snapshotName, $destinationVpsName = '')
+    {
+        $args = [
+            'destinationVpsName' => $destinationVpsName,
+        ];
+
+        return $this->adapter->patch(sprintf('vps/%s/snapshots/%s', $name, $snapshotName), $args, true);
+    }
+
+    public function snapshot($name, $snapshot)
+    {
+        return $this->adapter->get(sprintf('vps/%s/snapshots/%s', $name));
+    }
+
+    public function snapshots($name)
+    {
+        return $this->adapter->get(sprintf('vps/%s/snapshots', $name));
     }
 
     public function traffic($name)
