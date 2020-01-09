@@ -14,7 +14,7 @@ class VpsService extends AbstractApiCall
     ];
 
     /**
-     * @var array $endTimes When to delete the VPS? Immediately or at the end of current Period?
+     * @var array $endTimes When to delete? Immediately or at the end of current Period?
      */
     protected $endTimes = [
         'end',
