@@ -43,6 +43,15 @@ class VpsService extends AbstractApiCall
         return $this->adapter->post(sprintf('vps/%s/ip-addresses', $name), $args, true);
     }
 
+    public function addMailServiceToDomains(array $domainNames)
+    {
+        $args = [
+            'domainNames' => $domainNames,
+        ];
+
+        return $this->adapter->post('mail-service', $args, true);
+    }
+
     public function addons($name)
     {
         return $this->adapter->get(sprintf('/vps/%s/addons', $name));
@@ -76,6 +85,28 @@ class VpsService extends AbstractApiCall
     public function bigStorage($bigStorageName)
     {
         return $this->adapter->get(sprintf('big-storages/%s', $bigStorageName));
+    }
+
+    public function bigStorageBackups($bigStorageName)
+    {
+        return $this->adapter->get(sprintf('big-storages/%s/backups', $bigStorageName));
+    }
+
+    public function bigStorageUsage($bigStorageName, $dateTimeStart = null, $dateTimeEnd = null, $dateTimeFormat = 'Y-m-d H:i')
+    {
+        $args = [
+            'dateTimeFormat' => $dateTimeFormat,
+        ];
+
+        if ($dateTimeStart) {
+            $args['dateTimeStart'] = $dateTimeStart;
+        }
+
+        if ($dateTimeEnd) {
+            $args['dateTimeEnd'] = $dateTimeEnd;
+        }
+
+        return $this->adapter->get(sprintf('big-storages/%s/usage', $bigStorageName), $args);
     }
 
     public function bigStorages($name = null)
@@ -223,6 +254,11 @@ class VpsService extends AbstractApiCall
         return $this->adapter->get(sprintf('vps/%s/ip-addresses', $name));
     }
 
+    public function mailService()
+    {
+        return $this->adapter->get('mail-service');
+    }
+
     public function lock($name)
     {
         $details = $this->vps($name);
@@ -304,6 +340,11 @@ class VpsService extends AbstractApiCall
         return $this->adapter->get('products');
     }
 
+    public function regenerateMailServicePassword()
+    {
+        return $this->adapter->patch('mail-service', []);
+    }
+
     public function removeIpAddress($name, $ipAddress)
     {
         $args = [
@@ -339,6 +380,15 @@ class VpsService extends AbstractApiCall
         ];
 
         return $this->adapter->patch(sprintf('vps/%s/backups/%s', $name, $backupId), $args, true);
+    }
+
+    public function revertBigStorage($bigStorageName, $backupId)
+    {
+        $args = [
+            'action' => 'revert',
+        ];
+
+        return $this->adapter->patch(sprintf('big-storages/%s/backups/%s', $bigStorageName, $backupId), $args, true);
     }
 
     public function revertSnapshot($name, $snapshotName, $destinationVpsName = '')
