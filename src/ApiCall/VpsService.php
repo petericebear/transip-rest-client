@@ -48,6 +48,16 @@ class VpsService extends AbstractApiCall
         return $this->adapter->get(sprintf('/vps/%s/addons', $name));
     }
 
+    public function attachVpsToPrivateNetwork($name, $privateNetworkName)
+    {
+        $args = [
+            'action' => 'attachvps',
+            'privateNetwork' => $name,
+        ];
+
+        return $this->adapter->patch(sprintf('private-networks/%s', $privateNetworkName), $args, true);
+    }
+
     public function availabilityZones()
     {
         return $this->adapter->get('availability-zone');
@@ -61,6 +71,21 @@ class VpsService extends AbstractApiCall
     public function backups($name)
     {
         return $this->adapter->get(sprintf('vps/%s/backups', $name));
+    }
+
+    public function bigStorage($bigStorageName)
+    {
+        return $this->adapter->get(sprintf('big-storages/%s', $bigStorageName));
+    }
+
+    public function bigStorages($name = null)
+    {
+        $path = 'big-storages';
+        if ($name) {
+            $path .= '?vpsName=' . $name;
+        }
+
+        return $this->adapter->get($path);
     }
 
     public function cancel($name, $endTime = 'end')
@@ -82,6 +107,32 @@ class VpsService extends AbstractApiCall
         ];
 
         return $this->adapter->delete(sprintf('vps/%s/addons/%s', $name, $addon), $args, true);
+    }
+
+    public function cancelBigStorage($bigStorageName, $endTime = 'end')
+    {
+        if (!in_array($endTime, $this->endTimes)) {
+            $this->adapter->reportError(406, 'Not an available endTime given.');
+        }
+
+        $args = [
+            'endTime' => $endTime,
+        ];
+
+        return $this->adapter->delete(sprintf('big-storages/%s', $bigStorageName), $args, true);
+    }
+
+    public function cancelPrivateNetwork($privateNetworkName, $endTime = 'end')
+    {
+        if (!in_array($endTime, $this->endTimes)) {
+            $this->adapter->reportError(406, 'Not an available endTime given.');
+        }
+
+        $args = [
+            'endTime' => $endTime,
+        ];
+
+        return $this->adapter->delete(sprintf('private-networks/%s', $privateNetworkName), $args, true);
     }
 
     public function changeDescription($name, $description)
@@ -124,6 +175,16 @@ class VpsService extends AbstractApiCall
         ];
 
         return $this->adapter->post(sprintf('vps/%s/snapshots', $name), $args, true);
+    }
+
+    public function detachVpsFromPrivateNetwork($name, $privateNetworkName)
+    {
+        $args = [
+            'action' => 'detachvps',
+            'privateNetwork' => $name,
+        ];
+
+        return $this->adapter->patch(sprintf('private-networks/%s', $privateNetworkName), $args, true);
     }
 
     public function firewall($name)
@@ -208,7 +269,34 @@ class VpsService extends AbstractApiCall
             'addons' => $addons,
         ];
 
-        return $this->adapter->post(sprintf('/vps/%s/addons', $name), $args, true);
+        return $this->adapter->post(sprintf('vps/%s/addons', $name), $args, true);
+    }
+
+    public function orderBigStorage($size = 2, $offsiteBackups = true, $availabilityZone = 'ams0', $vpsName = '')
+    {
+        $args = [
+            'size' => $size,
+            'offsiteBackups' => $offsiteBackups,
+            'availabilityZone' => $availabilityZone,
+            'vpsName' => $vpsName,
+        ];
+
+        return $this->adapter->post(sprintf('big-storages'), $args, true);
+    }
+
+    public function privateNetwork($privateNetworkName)
+    {
+        return $this->adapter->get(sprintf('private-networks/%s', $privateNetworkName));
+    }
+
+    public function privateNetworks($name = null)
+    {
+        $path = 'private-networks';
+        if ($name) {
+            $path .= '?vpsName=' . $name;
+        }
+
+        return $this->adapter->get($path);
     }
 
     public function products()
@@ -309,6 +397,18 @@ class VpsService extends AbstractApiCall
         return $this->adapter->put('vps/' . $name, $args, true);
     }
 
+    public function updateBigStorage($bigStorageName, $description)
+    {
+        $details = $this->bigStorage($bigStorageName);
+        $details->bigStorage->description = $description;
+
+        $args = [
+            'bigStorage' => $details,
+        ];
+
+        return $this->adapter->put(sprintf('big-storages/%s', $bigStorageName), $args, true);
+    }
+
     public function updateFirewall($name, $firewall, bool $active, array $ruleSet = [])
     {
         $args = [
@@ -321,9 +421,16 @@ class VpsService extends AbstractApiCall
         return $this->adapter->put(sprintf('vps/%s/firewall', $name), $args, true);
     }
 
-    public function upgrades($name)
+    public function updatePrivateNetwork($privateNetworkName, $description)
     {
-        return $this->adapter->get(sprintf('vps/%s/upgrades', $name));
+        $details = $this->privateNetwork($privateNetworkName);
+        $details->privateNetwork->description = $description;
+
+        $args = [
+            'privateNetwork' => $details,
+        ];
+
+        return $this->adapter->put(sprintf('private-networks/%s', $privateNetworkName), $args, true);
     }
 
     public function upgrade($name, $productName)
@@ -333,6 +440,25 @@ class VpsService extends AbstractApiCall
         ];
 
         return $this->adapter->post(sprintf('vps/%s/upgrades', $name), $args, true);
+    }
+
+    public function upgradeBigStorage($bigStorageName, $size, $offsiteBackups = null)
+    {
+        $args = [
+            'bigStorageName' => $bigStorageName,
+            'size' => $size,
+        ];
+
+        if ($offsiteBackups) {
+            $args['offsiteBackups'] = $offsiteBackups;
+        }
+
+        return $this->adapter->post(sprintf('big-storages'), $args, true);
+    }
+
+    public function upgrades($name)
+    {
+        return $this->adapter->get(sprintf('vps/%s/upgrades', $name));
     }
 
     public function usageData($name)
