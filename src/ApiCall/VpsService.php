@@ -58,6 +58,11 @@ class VpsService extends AbstractApiCall
         return $this->adapter->get('availability-zone/' . $zone);
     }
 
+    public function backups($name)
+    {
+        return $this->adapter->get(sprintf('vps/%s/backups', $name));
+    }
+
     public function cancel($name, $endTime = 'end')
     {
         if (!in_array($endTime, $this->endTimes)) {
@@ -101,6 +106,16 @@ class VpsService extends AbstractApiCall
         return $this->adapter->post('vps', $args, true);
     }
 
+    public function convertBackupToSnapshot($name, $backupId, $description)
+    {
+        $args = [
+            'action' => 'convert',
+            'description' => $description,
+        ];
+
+        return $this->adapter->patch(sprintf('vps/%s/backups/%s', $name, $backupId), $args, true);
+    }
+
     public function createSnapshot($name, $description, $shouldStartVps = true)
     {
         $args = [
@@ -109,6 +124,11 @@ class VpsService extends AbstractApiCall
         ];
 
         return $this->adapter->post(sprintf('vps/%s/snapshots', $name), $args, true);
+    }
+
+    public function firewall($name)
+    {
+        return $this->adapter->get(sprintf('vps/%s/firewall', $name));
     }
 
     public function handover($name, $targetCustomerName)
@@ -135,18 +155,6 @@ class VpsService extends AbstractApiCall
     public function ipAddress($name, $ipAddress)
     {
         return $this->adapter->get(sprintf('vps/%s/ip-addresses/%s', $name, $ipAddress));
-    }
-
-    public function reverseDns($name, $ipAddress, $reverseDns)
-    {
-        $details = $this->ipAddress($name, $ipAddress);
-        $details->ipAddress->reverseDns = $reverseDns;
-
-        $args = [
-            'ipAddress' => $details,
-        ];
-
-        return $this->adapter->put(sprintf('vps/%s/ip-addresses/%s', $name, $ipAddress), $args, true);
     }
 
     public function ipAddresses($name)
@@ -224,6 +232,27 @@ class VpsService extends AbstractApiCall
         return $this->adapter->delete(sprintf('vps/%s/snapshots/%s', $name, $snapshotName), $args, true);
     }
 
+    public function reverseDns($name, $ipAddress, $reverseDns)
+    {
+        $details = $this->ipAddress($name, $ipAddress);
+        $details->ipAddress->reverseDns = $reverseDns;
+
+        $args = [
+            'ipAddress' => $details,
+        ];
+
+        return $this->adapter->put(sprintf('vps/%s/ip-addresses/%s', $name, $ipAddress), $args, true);
+    }
+
+    public function revertBackup($name, $backupId)
+    {
+        $args = [
+            'action' => 'revert',
+        ];
+
+        return $this->adapter->patch(sprintf('vps/%s/backups/%s', $name, $backupId), $args, true);
+    }
+
     public function revertSnapshot($name, $snapshotName, $destinationVpsName = '')
     {
         $args = [
@@ -278,6 +307,18 @@ class VpsService extends AbstractApiCall
         ];
 
         return $this->adapter->put('vps/' . $name, $args, true);
+    }
+
+    public function updateFirewall($name, $firewall, bool $active, array $ruleSet = [])
+    {
+        $args = [
+            'VpsFirewall' => [
+                'isEnabled' => $active,
+                'ruleSet' => $ruleSet,
+            ],
+        ];
+
+        return $this->adapter->put(sprintf('vps/%s/firewall', $name), $args, true);
     }
 
     public function upgrades($name)
