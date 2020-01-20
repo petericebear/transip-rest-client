@@ -168,12 +168,8 @@ class VpsService extends AbstractApiCall
 
     public function changeDescription($name, $description)
     {
-        $details = $this->vps($name);
-        $details->vps->description = $description;
-
-        $args = [
-            'vps' => $details,
-        ];
+        $args = $this->vps($name);
+        $args->vps->description = $description;
 
         return $this->adapter->put('vps/' . $name, $args, true);
     }
