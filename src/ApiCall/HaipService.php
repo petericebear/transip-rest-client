@@ -67,7 +67,7 @@ class HaipService extends AbstractApiCall
 
     public function detachCertificate($haipName, $certificateId)
     {
-        return $this->adapter->delete(sprintf('haips/%s/certificates/%s', $haipName, $certificateId), true);
+        return $this->adapter->delete(sprintf('haips/%s/certificates/%s', $haipName, $certificateId), [], true);
     }
 
     public function haip($haipName)
